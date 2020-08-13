@@ -1,6 +1,17 @@
 language: java
 os: linux
 dist: bionic
+arch: 
+  - amd64
+  - ppc64le
+before_install: 
+  - |
+    if [ "$TRAVIS_CPU_ARCH" = "ppc64le" ]; then
+      mkdir -p /opt/maven
+      curl https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz|tar -xz --strip 1 -C /opt/maven
+      export MAVEN_HOME=/opt/maven
+      export PATH=${MAVEN_HOME}/bin:${PATH}
+    fi
 install: mvn -Ptravis -DskipTests=true -nsu -B install
 script:
   - mvn -Ptravis ${JACOCO} -nsu -B test
